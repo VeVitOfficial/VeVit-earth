@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//p/web apps/**)",
+      "Bash(dir /b \"P:\\\\web apps\\\\\")"
+    ]
+  }
+}

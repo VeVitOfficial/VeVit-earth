@@ -1,0 +1,238 @@
+/* ========================================
+   VeVit Earth — CesiumJS Overrides
+   ======================================== */
+
+/* Hide Cesium default UI */
+.cesium-viewer-bottom,
+.cesium-viewer-animationContainer,
+.cesium-viewer-timelineContainer,
+.cesium-viewer-fullscreenContainer,
+.cesium-viewer-vrContainer,
+.cesium-viewer-infoBoxContainer,
+.cesium-viewer-selectionIndicatorContainer,
+.cesium-viewer-geocoderContainer,
+.cesium-viewer-homeContainer,
+.cesium-viewer-sceneModePickerContainer,
+.cesium-viewer-navigationHelpButtonContainer {
+    display: none !important;
+}
+
+/* Globe container - Cesium REQUIRES explicit pixel height */
+#cesium-container {
+    position: fixed;
+    top: 64px; /* 4rem = 16 * 4 = 64px */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: calc(100vh - 64px);
+    min-height: 400px;
+    background: var(--bg-base);
+    overflow: hidden;
+}
+
+/* Adjust for left panel on desktop */
+@media (min-width: 1024px) {
+    #cesium-container {
+        left: 320px;
+        width: calc(100% - 320px);
+    }
+}
+
+/* Ensure Cesium fills container */
+#cesium-container .cesium-viewer,
+#cesium-container .cesium-viewer-container,
+#cesium-container .cesium-widget,
+#cesium-container .cesium-scene {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Cesium widget */
+.cesium-widget {
+    font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* Credit container */
+.cesium-credit-logoContainer,
+.cesium-credit-textContainer {
+    display: none !important;
+}
+
+/* Scene transitions */
+.cesium-sceneCanvas {
+    transition: opacity 300ms ease-out;
+}
+
+/* Globe atmosphere glow */
+.cesium-scene {
+    filter: saturate(1.1);
+}
+
+/* ========================================
+   Event Markers (Cesium Entities)
+   ======================================== */
+
+/* Pulse animation for markers */
+@keyframes cesium-pulse {
+    0% {
+        stroke-opacity: 0.8;
+        stroke-width: 2;
+    }
+    100% {
+        stroke-opacity: 0;
+        stroke-width: 20;
+    }
+}
+
+/* Marker clusters */
+.marker-cluster {
+    background: rgba(59, 130, 246, 0.3);
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+}
+
+/* ========================================
+   Info Box (Custom)
+   ======================================== */
+
+.cesium-infoBox {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.cesium-infoBox-title {
+    background: var(--bg-elevated);
+    color: var(--text-primary);
+    padding: 12px 16px;
+    font-weight: 600;
+    border-bottom: 1px solid var(--border);
+}
+
+.cesium-infoBox-content {
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    padding: 12px 16px;
+}
+
+/* ========================================
+   Tooltip (Custom)
+   ======================================== */
+
+.event-tooltip {
+    position: absolute;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+    color: var(--text-primary);
+    pointer-events: none;
+    z-index: 100;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    max-width: 250px;
+    transform: translateX(-50%);
+    white-space: nowrap;
+}
+
+.event-tooltip::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid var(--bg-surface);
+}
+
+.event-tooltip-category {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+}
+
+.event-tooltip-title {
+    font-weight: 500;
+}
+
+.event-tooltip-date {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+/* ========================================
+   Loading Overlay
+   ======================================== */
+
+.cesium-loading {
+    position: absolute;
+    inset: 0;
+    background: var(--bg-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+/* ========================================
+   Day/Night Terminator
+   ======================================== */
+
+/* The terminator line is handled by Cesium's enableLighting */
+
+/* ========================================
+   Mobile Touch Controls
+   ======================================== */
+
+@media (max-width: 768px) {
+    /* Increase touch target sizes */
+    .cesium-viewer {
+        touch-action: manipulation;
+    }
+
+    /* Disable inertia for better touch response */
+    .cesium-sceneScreenSpaceCameraController {
+        inertiaSpin: 0.5;
+        inertiaTranslate: 0.5;
+        inertiaZoom: 0.5;
+    }
+}
+
+/* ========================================
+   Minimap Leaflet Overrides
+   ======================================== */
+
+#minimap .leaflet-control-container {
+    display: none;
+}
+
+#minimap .leaflet-tile-pane {
+    filter: brightness(0.6) saturate(1.2);
+}
+
+#minimap .leaflet-viewport-rect {
+    fill: rgba(59, 130, 246, 0.2);
+    stroke: var(--accent);
+    stroke-width: 2;
+}
+
+/* ========================================
+   Performance Optimizations
+   ======================================== */
+
+/* Reduce GPU memory usage */
+.cesium-imagery-layer {
+    image-rendering: auto;
+}
+
+/* Optimize tile loading */
+.cesium-tile-provider {
+    max-resolution: 2048;
+}
